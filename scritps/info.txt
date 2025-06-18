@@ -1,0 +1,52 @@
+----------------------
+PostgreSQL
+----------------------
+
+docker exec -it postgres-dev psql -U devuser -d devdb 
+
+## ver bases de datos 
+\l
+
+## ver tablas
+\dt
+
+## ver columnas de una tabla especifica
+\d nombre_tabla
+
+## conectarse a una base de datos especifica
+\c nombre_base_datos
+
+
+
+
+----------------------
+MySQL
+----------------------
+
+docker exec -it mysql-dev mysql -u root -p
+# contraseña: admin123
+
+SHOW DATABASES;
+USE my_products_db;
+SELECT * FROM products;
+
+
+CREATE DATABASE IF NOT EXISTS my_auth_db;
+
+GRANT ALL PRIVILEGES ON my_auth_db.* TO 'devuser'@'%';
+FLUSH PRIVILEGES;
+
+SHOW GRANTS FOR 'devuser'@'%';
+
+
+
+.env
+DB_TYPE=mysql
+MYSQL_HOST=db_mysql # Nombre del servicio de MySQL en docker-compose.yml
+MYSQL_USER=auth_user # Usuario de tu DB
+MYSQL_PASSWORD=auth_password # Contraseña de tu DB
+MYSQL_DATABASE=my_auth_db # Nombre de tu base de datos
+MYSQL_PORT=3306 # Puerto de MySQL
+
+JWT_SECRET=tu_secreto_super_seguro_para_jwt # CAMBIA ESTO POR UN SECRETO LARGO Y ALEATORIO
+PORT=3000

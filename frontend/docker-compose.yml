@@ -1,0 +1,13 @@
+# docker-compose.yml (NUEVO ARCHIVO EN LA CARPETA frontend DEL PROYECTO)
+## version: '3.8'
+
+services:
+  # Servicio para el frontend de Flutter Web
+  flutter_frontend:
+    build: . # Construye la imagen usando el Dockerfile del frontend
+    ports:
+      - "8097:8097" # Mapea el puerto 80 del host al puerto 80 del contenedor Nginx
+                # Esto significa que tu app Flutter Web será accesible en http://localhost
+    restart: always # Asegura que el contenedor se reinicie si falla
+    # Nota: No hay 'depends_on' al backend aquí porque están en stacks de Compose separados.
+    # La comunicación se hace a través de la red del host (usando host.docker.internal).

@@ -1,0 +1,38 @@
+# docker-compose.yml (en la raíz de my_full_stack_app/)
+version: '3.8'
+
+services:
+  # Servicio para la API de Node.js
+  backend:
+    build: ./backend # Construye la imagen desde el Dockerfile en la carpeta 'backend'
+    ports:
+      - "3000:3000" # Mapea el puerto 3000 del host al puerto 3000 del contenedor
+    env_file:
+      - ./backend/.env # Carga las variables de entorno para el backend
+    volumes:
+      # Monta el código fuente para hot-reloading durante el desarrollo (opcional)
+      - ./backend:/app
+      - /app/node_modules # Evita que node_modules del host sobrescriba el del contenedor
+    depends_on:
+      - db_mysql # Asegura que la DB se inicie antes que el backend
+    restart: always # Reinicia el contenedor si falla
+
+  # Servicio de la Base de Datos MySQL
+  db_mysql:
+    image: mysql:8.0 # Usamos una imagen oficial de MySQL
+    command: --default-authentication-plugin=mysql_native_password # Para compatibilidad
+    environment:
+      # Estas variables son para la configuración inicial de MySQL Docker
+      MYSQL_ROOT_PASSWORD: admin123 # La contraseña de root (usada para crear el usuario)
+      MYSQL_DATABASE: my_auth_db     # El nombre de la DB
+      MYSQL_USER: devuser             # El usuario que creamos en el script SQL
+      MYSQL_PASSWORD: devpass     # La contraseña para ese usuario
+    ports:
+      - "3306:3306" # Opcional: Mapea el puerto de la DB al host (para MySQL Workbench, etc.)
+    volumes:
+      - mysql_data:/var/lib/mysql # Persistencia de datos de la DB
+    restart: always # Reinicia el contenedor si falla
+
+# Volúmenes para persistir los datos de la base de datos
+volumes:
+  mysql_data:
